@@ -1,186 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Todo</title>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
-      integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
-  </head>
-  <body>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Todo</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+    integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+  <form id="form">
     <input type="text" placeholder="Task" name="task" id="task" />
 
-    <button onclick="addTask(title)">addTask</button>
-    <!-- <button onclick="updateTask()">updateTask</button>
-    <button onclick="deleteTask()">deleteTask</button> -->
+    <button type="submit">addTask</button>
+  </form>
 
-    <!-- table for showing data -->
 
-    <table id="app" border="1"></table>
+  <table id="app" border="1"></table>
 
-    <script>
-      // api url
-      const url = "http://localhost:5000";
+  <script>
 
-      let data = [
-        {
-          _id: "629fad4bbaf415979491504a",
-          title: "React Codiel App 10AM to 12:30 PM",
-          status: true,
-          __v: 0,
-        },
-        {
-          _id: "629fad98baf415979491504c",
-          title: "Lunch and Rest 12:30 to 03:00PM",
-          status: true,
-          __v: 0,
-        },
-        {
-          _id: "629fae1cbaf4159794915050",
-          title: "Running, Cooking, Dinner and rest 05:30 to 10:00PM",
-          status: true,
-          __v: 0,
-        },
-        {
-          _id: "62a0ffd70183586c553a44de",
-          title: "how are you",
-          status: true,
-          __v: 0,
-        },
-        {
-          _id: "62a7f3b8faf8f08c24f01ea1",
-          title: "hello world",
-          status: true,
-          __v: 0,
-        },
-        {
-          _id: "62a7f3bafaf8f08c24f01ea3",
-          title: "hello world",
-          status: true,
-          __v: 0,
-        },
-        {
-          _id: "62b23f321ad4b361fb6e7c8d",
-          title: "hello",
-          status: true,
-          __v: 0,
-        },
-        {
-          _id: "62b3302d7a9f240b86883c88",
-          title: "hello saif2",
-          status: false,
-          __v: 0,
-        },
-        {
-          _id: "62b337184e33f28eed678d55",
-          title: "hello Nazir",
-          status: false,
-          __v: 0,
-        },
-      ];
-      // Defining async function
-      function getTask() {
-        show(data);
-      }
-      function addTask() {
-        var myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
-        task = document.querySelector("#task").value;
-        var raw = JSON.stringify({
-          title: task,
-        });
+    let data = [];
+    if (localStorage.data && localStorage.data != '[]') {
+      data = JSON.parse(localStorage.data);
+    }
 
-        var requestOptions = {
-          method: "POST",
-          headers: myHeaders,
-          body: raw,
-          redirect: "follow",
-        };
-
-        fetch(url, requestOptions)
-          .then((response) => response.json())
-          .then((result) => getTask())
-          .catch((error) => console.log("error", error));
-      }
-
-      function updateTask(id) {
-        var myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
-
-        var raw = JSON.stringify({
-          status: true,
-        });
-
-        var requestOptions = {
-          method: "PATCH",
-          headers: myHeaders,
-          body: raw,
-          redirect: "follow",
-        };
-
-        fetch(url + "/" + id, requestOptions)
-          .then((response) => response.json())
-          .then((result) => getTask())
-          .catch((error) => console.log("error", error));
-      }
-
-      function deleteTask(id) {
-        // id = document.querySelector("#id");
-        var requestOptions = {
-          method: "DELETE",
-          redirect: "follow",
-        };
-
-        fetch(url + "/" + id, requestOptions)
-          .then((response) => response.json())
-          .then((result) => getTask())
-          .catch((error) => console.log("error", error));
-      }
-
-      // Calling that async function
+    let lastId = 0;
+    if (localStorage.lastId) {
+      lastId = parseInt(localStorage.lastId);
+    }
+    // Defining async function
+    function getTask() {
+      show(data);
+    }
+    function addTask(e) {
+      e.preventDefault();
+      task = document.querySelector("#task").value;
+      lastId++;
+      data.push({
+        id: lastId,
+        title: task,
+        status: false
+      });
       getTask();
+      localStorage.data = JSON.stringify(data);
+      localStorage.lastId = lastId;
+      document.querySelector("#task").value = '';
+    }
 
-      // Function to define innerHTML for HTML table
-      function show(task) {
-        let tab = `<tr style="color: blue">
+    function updateTask(id) {
+      data = data.map(e => e.id == id ? { ...e, status: true } : e);
+      localStorage.data = JSON.stringify(data);
+      getTask();
+    }
+
+    function deleteTask(id) {
+      data = data.filter(e => e.id != id);
+      localStorage.data = JSON.stringify(data);
+      getTask();
+    }
+
+    // Calling that async function
+    getTask();
+
+    // Function to define innerHTML for HTML table
+    function show(task) {
+      let tab = `<tr style="color: blue">
       		<th>Task</th>
       		<th>Status</th>
       		<th>Delete</th>
       		</tr>`;
 
-        // Loop to access all rows
-        for (let r of task) {
-          let color = "";
-          let clkevt = "";
-          if (r.status == true) {
-            color = "green";
-          } else {
-            color = "red";
-            clkevt = `onclick="updateTask('${r._id}')"`;
-          }
-          tab += `<tr style="color: ${color}">
+      // Loop to access all rows
+      for (let r of task) {
+        let color = "";
+        let clkevt = "";
+        if (r.status == true) {
+          color = "green";
+        } else {
+          color = "red";
+          clkevt = `onclick="updateTask('${r.id}')"`;
+        }
+        tab += `<tr style="color: ${color}">
       	<td  ${clkevt}>${r.title} </td>
       	<td>${r.status}</td>
-      	<td onclick="deleteTask('${r._id}')"><i class="fa fa-trash"></i></td>
+      	<td onclick="deleteTask('${r.id}')"><i class="fa fa-trash"></i></td>
       </tr>`;
-        }
-
-        //   console.log(task);
-        // if (status == "true") {
-        //   task.style.color = "green";
-        // } else {
-        //   task.style.color = "red";
-        // }
-
-        // Setting innerHTML as tab variable
-        document.getElementById("app").innerHTML = tab;
-        // document.getElementById("employees").style.color = "red";
       }
-    </script>
-  </body>
+
+      //   console.log(task);
+      // if (status == "true") {
+      //   task.style.color = "green";
+      // } else {
+      //   task.style.color = "red";
+      // }
+
+      // Setting innerHTML as tab variable
+      document.getElementById("app").innerHTML = tab;
+
+      var addBtn = document.querySelector('form');
+      addBtn.addEventListener('submit', addTask);
+      // document.getElementById("employees").style.color = "red";
+    }
+  </script>
+</body>
+
 </html>
