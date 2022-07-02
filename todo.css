@@ -1,0 +1,52 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: peru;
+  color: #fff;
+  margin: 30px;
+  padding: 30px;
+}
+
+.container {
+  border: 1px;
+  margin: auto;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+input,
+button {
+  border: 1px;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+  font-size: 14px;
+  padding: 8px 10px;
+  margin: -2px;
+}
+
+input[type="text"] {
+  width: 300px;
+}
+
+#btn {
+  cursor: pointer;
+  border-left: 0;
+  border-radius: 0;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+#app {
+  padding: 10px;
+  margin: 5px;
+  width: 370px;
+  max-height: 500px;
+  border: 2px solid;
+  border-radius: 5px;
+}
