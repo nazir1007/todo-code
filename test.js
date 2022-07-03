@@ -42,9 +42,7 @@ let data = [];
 
     // Function to define innerHTML for HTML table
     function show(task) {
-      let tab = `<tr style="color: blue">
-                   
-        	</tr>`;
+      let tab = ``;
 
       // Loop to access all rows
       for (let r of task) {
