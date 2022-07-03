@@ -43,10 +43,10 @@
         e.preventDefault();
         task = document.querySelector("#task").value;
         lastId++;
-        data.push({
+        data = [...data,{
           id: lastId,
           title: task,
-        });
+        }];
         getTask();
         localStorage.data = JSON.stringify(data);
         localStorage.lastId = lastId;
@@ -91,19 +91,12 @@
       </tr>`;
         }
 
-        //   console.log(task);
-        // if (status == "true") {
-        //   task.style.color = "green";
-        // } else {
-        //   task.style.color = "red";
-        // }
 
         // Setting innerHTML as tab variable
         document.getElementById("app").innerHTML = tab;
 
         var addBtn = document.querySelector("form");
         addBtn.addEventListener("submit", addTask);
-        // document.getElementById("employees").style.color = "red";
       }
     </script>
   </body>
