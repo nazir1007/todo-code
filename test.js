@@ -15,10 +15,10 @@ let data = [];
       e.preventDefault();
       task = document.querySelector("#task").value;
       lastId++;
-      data.push({
+      data = [...data,{
         id: lastId,
         title: task,
-      });
+      }];
       getTask();
       localStorage.data = JSON.stringify(data);
       localStorage.lastId = lastId;
