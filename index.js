@@ -5,22 +5,22 @@ const App = () => {
         {
             id: "1",
             title: "task name",
-            status: true
+            status: false
         },
         {
             id: "2",
             title: "task nam2",
-            status: true
+            status: false
         },
         {
             id: "3",
             title: "task nam3",
-            status: true
+            status: false
         },
         {
             id: "4",
             title: "task nam4",
-            status: true
+            status: false
         },
     ]);
     let lastId = 5;
@@ -32,12 +32,17 @@ const App = () => {
         setData([...data, {
             id: lastId,
             title: task,
+            status:false
         }])
         localStorage.data = JSON.stringify(data);
         localStorage.lastId = lastId;
         setTask("")
     }
-
+    function updateTask(id) {
+        setData(data.map((e) => (e.id == id ? { ...e, status: true } : e)));
+        console.log(id,data);
+        localStorage.data = JSON.stringify(data);
+    }
     return (
         <div class="container" onSubmit={addTask}>
             <form id="form">
@@ -49,9 +54,9 @@ const App = () => {
             <table id="app">
                 <tbody>
                     {
-                        data.map((e, i) => <tr key={i}>
-                            <td>{e.title}</td>
-                            <td><i class="fa fa-trash"></i></td>
+                        data.map((e, i) => <tr key={i} style={{color: e.status ? "green":"red"}}>
+                            <td onClick={() => updateTask(e.id)}>{e.title}</td>
+                            <td><i class="fa fa-trash" ></i></td>
                         </tr>)
                     }
                 </tbody>
