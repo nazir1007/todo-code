@@ -21,10 +21,10 @@ const init = [
     },
 ];
 
-const Row = ({ e, updateTask }) => (
+const Row = ({ e, updateTask,deleteTask }) => (
     <tr style={{ color: e.status ? "green" : "red" }}>
         <td onClick={() => updateTask(e.id)}>{e.title}</td>
-        <td><i class="fa fa-trash" ></i></td>
+        <td onClick={() => deleteTask(e.id)}><i class="fa fa-trash" ></i></td>
     </tr>
 )
 
@@ -51,6 +51,11 @@ const App = ({init}) => {
         console.log(id, data);
         localStorage.data = JSON.stringify(data);
     }
+
+    const deleteTask = (id) => {
+        setData(data.filter((e) => e.id != id));
+        localStorage.data = JSON.stringify(data);
+      }
     return (
         <div class="container" onSubmit={addTask}>
             <form id="form">
@@ -62,7 +67,7 @@ const App = ({init}) => {
             <table id="app">
                 <tbody>
                     {
-                        data.map((e, i) => <Row key={i} e={e} updateTask={updateTask} />)
+                        data.map((e, i) => <Row key={i} e={e} updateTask={updateTask} deleteTask={deleteTask} />)
                     }
                 </tbody>
             </table>
