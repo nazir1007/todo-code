@@ -1,46 +1,54 @@
-const Component = () => <h1>hello saif</h1>
+const init = [
+    {
+        id: "1",
+        title: "task name",
+        status: false
+    },
+    {
+        id: "2",
+        title: "task nam2",
+        status: false
+    },
+    {
+        id: "3",
+        title: "task nam3",
+        status: false
+    },
+    {
+        id: "4",
+        title: "task nam4",
+        status: false
+    },
+];
+
+const Row = ({ e, updateTask }) => (
+    <tr style={{ color: e.status ? "green" : "red" }}>
+        <td onClick={() => updateTask(e.id)}>{e.title}</td>
+        <td><i class="fa fa-trash" ></i></td>
+    </tr>
+)
+
 const { useState } = React;
-const App = () => {
-    const [data, setData] = useState([
-        {
-            id: "1",
-            title: "task name",
-            status: false
-        },
-        {
-            id: "2",
-            title: "task nam2",
-            status: false
-        },
-        {
-            id: "3",
-            title: "task nam3",
-            status: false
-        },
-        {
-            id: "4",
-            title: "task nam4",
-            status: false
-        },
-    ]);
+const App = ({init}) => {
+    const [data, setData] = useState(init);
     let lastId = 5;
     const [task, setTask] = useState("")
 
-    function addTask(e) {
+    const addTask = (e) => {
         e.preventDefault();
         lastId++;
         setData([...data, {
             id: lastId,
             title: task,
-            status:false
+            status: false
         }])
         localStorage.data = JSON.stringify(data);
         localStorage.lastId = lastId;
         setTask("")
     }
-    function updateTask(id) {
+    const updateTask = (id) => {
         setData(data.map((e) => (e.id == id ? { ...e, status: true } : e)));
-        console.log(id,data);
+        console.log(id, data);
         localStorage.data = JSON.stringify(data);
     }
     return (
@@ -54,10 +62,7 @@ const App = () => {
             <table id="app">
                 <tbody>
                     {
-                        data.map((e, i) => <tr key={i} style={{color: e.status ? "green":"red"}}>
-                            <td onClick={() => updateTask(e.id)}>{e.title}</td>
-                            <td><i class="fa fa-trash" ></i></td>
-                        </tr>)
+                        data.map((e, i) => <Row key={i} e={e} updateTask={updateTask} />)
                     }
                 </tbody>
             </table>
@@ -65,4 +70,4 @@ const App = () => {
     )
 }
 
-ReactDOM.render(<App />, document.querySelector('#root'));
+ReactDOM.render(<App init={init} />, document.querySelector('#root'));
