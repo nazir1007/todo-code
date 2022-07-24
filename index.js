@@ -41,7 +41,6 @@ const App = ({ init }) => {
     useEffect(() => {
         localStorage.data = JSON.stringify(data);
         localStorage.lastId = lastId;
-        console.log(lastId);
     }, [data])
     return (
         <div class="container" onSubmit={addTask}>
