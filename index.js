@@ -1,61 +1,48 @@
 const init = [
-    {
-        id: "1",
-        title: "task name",
-        status: false
-    },
-    {
-        id: "2",
-        title: "task nam2",
-        status: false
-    },
-    {
-        id: "3",
-        title: "task nam3",
-        status: false
-    },
-    {
-        id: "4",
-        title: "task nam4",
-        status: false
-    },
+
 ];
 
-const Row = ({ e, updateTask,deleteTask }) => (
+const Row = ({ e, updateTask, deleteTask }) => (
     <tr style={{ color: e.status ? "green" : "red" }}>
         <td onClick={() => updateTask(e.id)}>{e.title}</td>
         <td onClick={() => deleteTask(e.id)}><i class="fa fa-trash" ></i></td>
     </tr>
 )
 
-const { useState } = React;
-const App = ({init}) => {
+const { useState, useEffect } = React;
+const App = ({ init }) => {
     const [data, setData] = useState(init);
-    let lastId = 5;
+    const [lastId, setLastId] = useState(0)
     const [task, setTask] = useState("")
-
+    useEffect(() => {
+        if (localStorage.data && localStorage.data != "" && localStorage.data != []) {
+            setData(JSON.parse(localStorage.data))
+            setLastId(+localStorage.lastId)
+        }
+    }, [])
     const addTask = (e) => {
         e.preventDefault();
-        lastId++;
+        setLastId(lastId+1)
         setData([...data, {
             id: lastId,
             title: task,
             status: false
         }])
-        localStorage.data = JSON.stringify(data);
-        localStorage.lastId = lastId;
         setTask("")
     }
     const updateTask = (id) => {
         setData(data.map((e) => (e.id == id ? { ...e, status: true } : e)));
-        console.log(id, data);
-        localStorage.data = JSON.stringify(data);
     }
 
     const deleteTask = (id) => {
         setData(data.filter((e) => e.id != id));
+    }
+
+    useEffect(() => {
         localStorage.data = JSON.stringify(data);
-      }
+        localStorage.lastId = lastId;
+        console.log(lastId);
+    }, [data])
     return (
         <div class="container" onSubmit={addTask}>
             <form id="form">
